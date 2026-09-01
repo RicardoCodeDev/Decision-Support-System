@@ -1,0 +1,676 @@
+<!DOCTYPE html>
+<html lang="de">
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>Battery Passport Decision Support System</title>
+        <link rel="stylesheet" href="css/style.css?v=3">
+        <link rel="stylesheet" href="css/decision-support.css">
+    </head>
+    <body>
+        <div class="container">
+            <header>
+                <h1>Battery Passport & Digital Decision Support</h1>
+                <p>Digital Decision Support System für recyclebare E-Auto-Batterien</p>
+                <button id="langToggle" class="btn-lang">🇩🇪 Deutsch</button>
+            </header>
+
+            <nav>
+                <button class="nav-btn active" data-page="dashboard">Dashboard</button>
+                <button class="nav-btn" data-page="batteries">Batterien verwalten</button>
+                <button class="nav-btn" data-page="create">Neue Batterie</button>
+                <button class="nav-btn" data-page="decision">Decision Support</button>
+            </nav>
+
+            <div class="content">
+
+                <!-- Dashboard Page -->
+                <div id="dashboard" class="page active">
+                    <h2>Übersicht</h2>
+                    <div class="dashboard-grid">
+                        <div class="stat-card">
+                            <h3>Gesamt Batterien</h3>
+                            <div class="value" id="totalBatteries">0</div>
+                        </div>
+                        <div class="stat-card">
+                            <h3>Perfekte Batterien</h3>
+                            <div class="value" id="perfectBatteries">0</div>
+                        </div>
+                        <div class="stat-card">
+                            <h3>Durchschn. Kapazität</h3>
+                            <div class="value" id="avgCapacity">0 Ah</div>
+                        </div>
+                        <div class="stat-card">
+                            <h3>Durchschn. Energie</h3>
+                            <div class="value" id="avgEnergy">0 kWh</div>
+                        </div>
+                    </div>
+
+                    <div class="chart-container">
+                        <h3>Status Verteilung</h3>
+                        <div id="statusDistribution"></div>
+                    </div>
+
+                    <div class="chart-container">
+                        <h3>Hersteller Verteilung</h3>
+                        <div id="manufacturerDistribution"></div>
+                    </div>
+                </div>
+
+                <!-- Battery List Page -->
+                <div id="batteries" class="page">
+                    <h2>Batterien Verwaltung</h2>
+                    <div class="search-box">
+                        <input type="text" id="searchBatteryId" placeholder="Batterie ID">
+                        <input type="text" id="searchManufacturer" placeholder="Hersteller">
+                        <label for="searchStatus"></label>
+                        <select id="searchStatus">
+                            <option value="">Alle</option>
+                            <option value="Perfekt">Perfekt</option>
+                            <option value="NichtErkennbar">Zustand nicht erkennbar</option>
+                            <option value="Defekt">Defekt</option>
+                            <option value="Zerstört">Zerstört</option>
+                        </select>
+                        <button class="btn">Suchen</button>
+                    </div>
+
+                    <table id="batteryTable">
+                        <thead>
+                            <tr>
+                                <th>Batterie ID</th>
+                                <th>Kategorie</th>
+                                <th>Hersteller</th>
+                                <th>Datum</th>
+                                <th>Status</th>
+                                <th>Aktionen</th>
+                            </tr>
+                        </thead>
+                        <tbody id="batteryTableBody"></tbody>
+                    </table>
+                </div>
+
+                <!-- Create Battery Page -->
+                <div id="create" class="page">
+                    <h2>Neue Batterie erstellen</h2>
+                    <form id="batteryForm">
+                        <h3>1. Allgemeine Batterie- und Herstellerinformationen</h3>
+                        <div class="form-grid">
+                            <div class="form-group">
+                                <label for="batteryIdentification">Batterie ID *</label>
+                                <input type="text" id="batteryIdentification" required>
+                            </div>
+                            <div class="form-group">
+                                <label for="batteryCategory">Kategorie</label>
+                                <select id="batteryCategory">
+                                    <option disabled>Portable Battery</option>
+                                    <option>Electric Vehicle Battery (EV)</option>
+                                    <option disabled>Industrial Battery</option>
+                                    <option disabled>Battery Electric Storage System (BESS)</option>
+                                    <option disabled>Light Means of Transport Battery (LMT)</option>
+                                    <option disabled>Stating, Lighting and Ignition Battery (SLI)</option>
+                                </select>
+                            </div>
+                            <div class="form-group">
+                                <label for="manufacturerIdentification">Hersteller ID</label>
+                                <input type="text" id="manufacturerIdentification">
+                            </div>
+                            <div class="form-group">
+                                <label for="manufacturerDate">Herstellungsdatum</label>
+                                <input type="date" id="manufacturerDate">
+                            </div>
+                            <div class="form-group">
+                                <label for="status">Status</label>
+                                <select id="status">
+                                    <option value="Perfekt">Perfekt</option>
+                                    <option value="NichtErkennbar">Zustand nicht erkennbar</option>
+                                    <option value="Defekt">Defekt</option>
+                                    <option value="Zerstört">Zerstört</option>
+                                </select>
+                            </div>
+                        </div>
+
+                        <h3>2. Batteriematerialien und -zusammensetzung</h3>
+                        <div class="form-grid">
+                            <div class="form-group">
+                                <label for="chemistry">Batterie Chemie</label>
+                                <select id="chemistry">
+                                    <option>Lithium-iron-phosphate battery(LFP)</option>
+                                    <option disabled>Lithium-nickel-manganese-cobalt oxides (NMC)</option>
+                                    <option disabled>Lithium-ion lithium cobalt oxide battery (ICR)</option>
+                                    <option disabled>Lithium-silicon battery</option>
+                                    <option disabled>Lithium-ion manganese iron phosphate battery</option>
+                                    <option disabled>Lithium-ion manganese-oxide battery (LMO)</option>
+                                    <option disabled>Lithium-ion polymer battery (LiPo)</option>
+                                    <option disabled>Lithium-nickel-cobalt-aluminium oxides</option>
+                                </select>
+                            </div>
+                            <div class="form-group">
+                                <label for="cathode">Kathoden Material</label>
+                                <input type="text" id="cathode">
+                            </div>
+                            <div class="form-group">
+                                <label for="anode">Anoden Material</label>
+                                <input type="text" id="anode">
+                            </div>
+                            <div class="form-group">
+                                <label for="electrolyte">Elektrolyt Material</label>
+                                <input type="text" id="electrolyte">
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="environmentImpactText">Auswirkungen von Stoffen auf die Umwelt (optional)</label>
+                            <textarea id="environmentImpactText" rows="4" placeholder="Beschreiben Sie hier die Auswirkungen..."></textarea>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="healthSafetyText">Auswirkungen von Stoffen auf die menschliche Gesundheit und Sicherheit (optional)</label>
+                            <textarea id="healthSafetyText" rows="4" placeholder="Beschreiben Sie hier mögliche Auswirkungen oder Maßnahmen..."></textarea>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="criticalMaterialsFile">Kritische Rohstoffe (optional)</label>
+                            <input type="file" id="criticalRawMaterialsPdf" accept=".pdf">
+                            <small class="allowed-formats">Nur PDF erlaubt</small>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="hazardousSubstancesFile">Gefahrstoffe (optional)</label>
+                            <input type="file" id="hazardousSubstancesPdf" accept=".pdf">
+                            <small class="allowed-formats">Nur PDF erlaubt</small>
+                        </div>
+
+                        <h3>3. Kreislaufwirtschaft und Ressourceneffizienz</h3>
+                        <div class="form-grid">
+                            <div class="form-group">
+                                <label for="removalInstructionFile">Anleitung zum Entfernen</label>
+                                <input type="file" id="removalManualPdf" accept=".pdf">
+                                <small class="allowed-formats">Nur PDF erlaubt</small>
+                            </div>
+
+                            <div class="form-group">
+                                <label for="disassemblyInstructionFile">Anleitung zum Zerlegen</label>
+                                <input type="file" id="disassemblyManualPdf" accept=".pdf">
+                                <small class="allowed-formats">Nur PDF erlaubt</small>
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="componentPartNumber">Teilenummer der Komponenten</label>
+                            <input type="number" id="componentPartNumber" min="0" step="1">
+                            <small class="allowed-formats">Nur ganze Zahlen ≥ 0 erlaubt.</small>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="safetyInstructionFile">Sicherheitsanweisungen</label>
+                            <input type="file" id="safetyInstructionsPdf" accept=".pdf">
+                            <small class="allowed-formats">Nur PDF erlaubt</small>
+                        </div>
+
+                        <h3>Anteil des recycelten Inhalts vor dem Verbrauch</h3>
+                        <div class="form-grid">
+                            <div class="form-group">
+                                <label for="preRecycledLi">Li (%)</label>
+                                <input type="number" step="0.1" id="preRecycledLi">
+                            </div>
+                            <div class="form-group">
+                                <label for="preRecycledCo">Co (%)</label>
+                                <input type="number" step="0.1" id="preRecycledCo">
+                            </div>
+                            <div class="form-group">
+                                <label for="preRecycledNi">Ni (%)</label>
+                                <input type="number" step="0.1" id="preRecycledNi">
+                            </div>
+                            <div class="form-group">
+                                <label for="preRecycledPb">Pb (%)</label>
+                                <input type="number" step="0.1" id="preRecycledPb">
+                            </div>
+                        </div>
+
+                        <h3>Anteil des recycelten Inhalts nach dem Verbrauch</h3>
+                        <div class="form-grid">
+                            <div class="form-group">
+                                <label for="recycledLi">Li (%)</label>
+                                <input type="number" step="0.1" id="recycledLi">
+                            </div>
+                            <div class="form-group">
+                                <label for="recycledCo">Co (%)</label>
+                                <input type="number" step="0.1" id="recycledCo">
+                            </div>
+                            <div class="form-group">
+                                <label for="recycledNi">Ni (%)</label>
+                                <input type="number" step="0.1" id="recycledNi">
+                            </div>
+                            <div class="form-group">
+                                <label for="recycledPb">Pb (%)</label>
+                                <input type="number" step="0.1" id="recycledPb">
+                            </div>
+                        </div>
+
+                        <h3>4. Performance</h3>
+                        <div class="form-grid">
+                            <div class="form-group">
+                                <label for="capacity">Nennkapazität (Ah)</label>
+                                <input type="number" step="0.01" id="capacity">
+                            </div>
+                            <div class="form-group">
+                                <label for="energy">Zertifizierte nutzbare Batterieenergie(kWh)(optional)</label>
+                                <input type="number" step="0.01" id="energy">
+                            </div>
+                            <div class="form-group">
+                                <label for="voltageMin">Minimale Spannung (V)</label>
+                                <input type="number" step="0.01" id="voltageMin">
+                            </div>
+                            <div class="form-group">
+                                <label for="voltageNominal">Nominale Spannung (V)</label>
+                                <input type="number" step="0.01" id="voltageNominal">
+                            </div>
+                            <div class="form-group">
+                                <label for="voltageMax">Maximale Spannung (V)</label>
+                                <input type="number" step="0.01" id="voltageMax">
+                            </div>
+                            <div class="form-group">
+                                <label for="temperatureMin">Minimale Temperatur (°C)</label>
+                                <input type="number" step="0.1" id="temperatureMin">
+                            </div>
+                            <div class="form-group">
+                                <label for="temperatureMax">Maximale Temperatur (°C)</label>
+                                <input type="number" step="0.1" id="temperatureMax">
+                            </div>
+                            <div class="form-group">
+                                <label for="powerOriginalW">Ursprüngliche Leistungskapazität (W)</label>
+                                <input type="number" step="0.01" id="powerOriginalW">
+                            </div>
+                            <div class="form-group">
+                                <label for="maxBatteryCapacity">Maximal zulässige Batteriekapazität (Ah)</label>
+                                <input type="number" step="0.01" id="maxBatteryCapacity">
+                            </div>
+                            <div class="form-group">
+                                <label for="internalResistanceCell">Innenwiderstand – Zelle (mΩ)</label>
+                                <input type="number" step="0.01" id="internalResistanceCell">
+                            </div>
+                            <div class="form-group">
+                                <label for="internalResistancePack">Innenwiderstand – Akku (mΩ)</label>
+                                <input type="number" step="0.01" id="internalResistancePack">
+                            </div>
+                        </div>
+
+                        <button type="submit" class="btn">Batterie speichern</button>
+                        <button type="reset" class="btn btn-secondary">Zurücksetzen</button>
+                    </form>
+                </div>
+
+                <!-- Technical Criteria -->
+                <div id="decision" class="page">
+                    <h2>Decision Support</h2>
+
+                    <div class="battery-selection-section">
+                        <h3>Batterie auswählen</h3>
+                        <div class="form-group">
+                            <label for="battery-select">Batterie aus Datenbank:</label>
+                            <select id="battery-select" class="form-control">
+                                <option value="">-- Batterie auswählen --</option>
+                            </select>
+                            <small class="form-text text-muted">
+                                Wählen Sie eine Batterie aus, um bereits gespeicherte Decision-Daten zu laden.
+                            </small>
+                        </div>
+                    </div>
+
+                    <hr class="section-divider">
+                    <div>
+                        <div class="category-section category-technical">
+                            <h3 id="cat-technical">Technische Kriterien</h3>
+
+                            <div class="criterion-card">
+                                <div class="criterion-header">
+                                    <div class="criterion-label">
+                                        <label>
+                                            <span id="crit-soh-label">State of Health (SoH)</span>
+                                            <span class="badge badge-mandatory" id="badge-mandatory-soh">Pflichtkriterium</span>
+                                        </label>
+                                        <span class="description" id="crit-soh-desc">Aktueller Gesundheitszustand der Batterie (≥ 70% für Wiederverwendung)</span>
+                                    </div>
+                                    <div class="weight-info">Gewichtung: 1.0</div>
+                                </div>
+                                <div class="criterion-input">
+                                    <input type="range" id="soh-range" min="0" max="100" value="0" data-field="soh">
+                                    <input type="number" id="soh-number" min="0" max="100" value="0" data-field="soh">
+                                </div>
+                            </div>
+
+                            <div class="criterion-card">
+                                <div class="criterion-header">
+                                    <div class="criterion-label">
+                                        <label>
+                                            <span id="crit-remaining-label">Restladung/Kapazität</span>
+                                            <span class="badge badge-mandatory" id="badge-mandatory-rem">Pflichtkriterium</span>
+                                        </label>
+                                        <span class="description" id="crit-remaining-desc">100 = stabil; 0 = instabil</span>
+                                    </div>
+                                    <div class="weight-info">Gewichtung: 0.6</div>
+                                </div>
+                                <div class="criterion-input">
+                                    <input type="range" id="remainingCharge-range" min="0" max="100" value="0" data-field="remainingCharge">
+                                    <input type="number" id="remainingCharge-number" min="0" max="100" value="0" data-field="remainingCharge">
+                                </div>
+                            </div>
+
+                            <div class="criterion-card">
+                                <div class="criterion-header">
+                                    <div class="criterion-label">
+                                        <label>
+                                            <span id="crit-resistance-label">Innenwiderstand</span>
+                                            <span class="badge badge-optional" id="badge-optional-resistance">Optional</span>
+                                        </label>
+                                        <span class="description" id="crit-resistance-desc">100 = sicher; 0 = unsicher</span>
+                                    </div>
+                                    <div class="weight-info">Gewichtung: 0.8</div>
+                                </div>
+                                <div class="criterion-input">
+                                    <input type="range" id="internalResistance-range" min="0" max="100" value="0" data-field="internalResistance">
+                                    <input type="number" id="internalResistance-number" min="0" max="100" value="0" data-field="internalResistance">
+                                </div>
+                            </div>
+
+                            <div class="criterion-card">
+                                <div class="criterion-header">
+                                    <div class="criterion-label">
+                                        <label>
+                                            <span id="crit-safety-label">Sicherheit/Schäden</span>
+                                            <span class="badge badge-optional" id="badge-optional-safety">Optional</span>
+                                        </label>
+                                        <span class="description" id="crit-safety-desc">100 = intakt; 0 = beschädigt</span>
+                                    </div>
+                                    <div class="weight-info">Gewichtung: 1.0</div>
+                                </div>
+                                <div class="criterion-input">
+                                    <input type="range" id="safetyDamage-range" min="0" max="100" step="25"
+                                           value="0" data-field="safetyDamage">
+                                    <input type="number" id="safetyDamage-number" min="0" max="100" step="25"
+                                           value="0" data-field="safetyDamage">
+
+                                </div>
+                            </div>
+
+                            <div class="criterion-card">
+                                <div class="criterion-header">
+                                    <div class="criterion-label">
+                                        <label>
+                                            <span id="crit-bms-label">BMS Zustand</span>
+                                            <span class="badge badge-optional" id="badge-optional-bms">Optional</span>
+                                        </label>
+                                        <span class="description" id="crit-bms-desc">0% = nicht ersetzbar, 100% = BMS ersetzbar</span>
+                                    </div>
+                                    <div class="weight-info">Gewichtung: 0.4</div>
+                                </div>
+
+                                <div class="criterion-input">
+                                    <!-- Toggle-Schalter -->
+                                    <div class="toggle-container">
+                                        <span class="toggle-label-left">0%</span>
+                                        <label class="toggle-switch">
+                                            <input type="checkbox" id="bmsCondition-toggle">
+                                            <span class="toggle-slider"></span>
+                                        </label>
+                                        <span class="toggle-label-right">100%</span>
+                                    </div>
+
+                                    <!-- Hidden Field für Backend -->
+                                    <input type="hidden" id="bmsCondition-number" value="0" data-field="bmsCondition">
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Economic Criteria -->
+                        <div class="category-section category-economic">
+                            <h3 id="cat-economic">Wirtschaftliche Kriterien</h3>
+
+                            <div class="criterion-card">
+                                <div class="criterion-header">
+                                    <div class="criterion-label">
+                                        <label>
+                                            <span id="crit-cost-label">Kosten für Aufbereitung</span>
+                                            <span class="badge badge-optional" id="badge-optional-cost">Optional</span>
+                                        </label>
+                                        <span class="description" id="crit-cost-desc">100 = rentabel; 0 = kostspielig</span>
+                                    </div>
+                                    <div class="weight-info">Gewichtung: 0.7</div>
+                                </div>
+                                <div class="criterion-input">
+                                    <input type="range" id="costRefurbishment-range" min="0" max="100" value="0" data-field="costRefurbishment">
+                                    <input type="number" id="costRefurbishment-number" min="0" max="100" value="0" data-field="costRefurbishment">
+                                </div>
+                            </div>
+
+                            <div class="criterion-card">
+                                <div class="criterion-header">
+                                    <div class="criterion-label">
+                                        <label>
+                                            <span id="crit-market-label">Marktnachfrage</span>
+                                            <span class="badge badge-optional" id="badge-optional-market">Optional</span>
+                                        </label>
+                                        <span class="description" id="crit-market-desc">Bewertung der Marktnachfrage</span>
+                                    </div>
+                                    <div class="weight-info">Gewichtung: 1.0</div>
+                                </div>
+
+                                <div class="criterion-input market-demand-input">
+                                    <input type="range" id="marketDemand-range" min="0" max="3" value="0" step="1" data-field="marketDemand">
+
+                                    <div class="slider-labels">
+                                        <span>Sehr schlecht</span>
+                                        <span>Schlecht</span>
+                                        <span>Gut</span>
+                                        <span>Sehr gut</span>
+                                    </div>
+
+                                    <!-- Zahl rechts anzeigen -->
+                                    <span class="market-demand-value" id="marketDemand-display">0</span>
+
+                                    <!-- Hidden field für Backend -->
+                                    <input type="hidden" id="marketDemand-number" value="0" data-field="marketDemand">
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Environmental Criteria -->
+                        <div class="category-section category-environmental">
+                            <h3 id="cat-environmental">Umweltkriterien</h3>
+
+                            <div class="criterion-card">
+                                <div class="criterion-header">
+                                    <div class="criterion-label">
+                                        <label>
+                                            <span id="crit-envbenefit-label">Umweltvorteil</span>
+                                            <span class="badge badge-optional" id="badge-optional-envbenefit">Optional</span>
+                                        </label>
+                                        <span class="description" id="crit-envbenefit-desc">100 = verlängert Lebensdauer mit Vorteil; 0 = Material zurückgewinnen erforderlich</span>
+                                    </div>
+                                    <div class="weight-info">Gewichtung: 1.0</div>
+                                </div>
+                                <div class="criterion-input">
+                                    <input type="range" id="environmentalBenefit-range" min="0" max="100" value="0" data-field="environmentalBenefit">
+                                    <input type="number" id="environmentalBenefit-number" min="0" max="100" value="0" data-field="environmentalBenefit">
+                                </div>
+                            </div>
+
+                            <div class="criterion-card">
+                                <div class="criterion-header">
+                                    <div class="criterion-label">
+                                        <label>
+                                            <span id="crit-logistics-label">Transportdistanz</span>
+                                            <span class="badge badge-optional" id="badge-optional-logistics">Optional</span>
+                                        </label>
+                                        <span class="description" id="crit-logistics-desc"> ≥ 100km = Recycle empfohlen | ≤100km = Reuse empfohlen </span>
+                                    </div>
+                                    <div class="weight-info">Gewichtung: 0.5</div>
+                                </div>
+                                <div class="criterion-input toggle-input">
+                                    <div class="toggle-container">
+                                        <span class="toggle-label-left">Mehr als 100km<br><small>(Recycle)</small></span>
+                                        <label class="toggle-switch">
+                                            <input type="checkbox" id="logisticsFootprint-toggle">
+                                            <span class="toggle-slider"></span>
+                                        </label>
+                                        <span class="toggle-label-right">Weniger als 100km<br><small>(Reuse)</small></span>
+                                    </div>
+                                    <input type="hidden" id="logisticsFootprint-number" value="50" data-field="logisticsFootprint">
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Regulatory Criteria -->
+                        <div class="category-section category-regulatory">
+                            <h3 id="cat-regulatory">Regulatorische Kriterien</h3>
+
+                            <div class="criterion-card">
+                                <div class="criterion-header">
+                                    <div class="criterion-label">
+                                        <label>
+                                            <span id="crit-hazard-label">Gefahrstoffklassifizierung</span>
+                                            <span class="badge badge-mandatory" id="badge-mandatory-hazard">Pflichtkriterium</span>
+                                        </label>
+                                        <span class="description" id="crit-hazard-desc">100 = erfüllt Standards; 0 = nicht geeignet für Second-Life</span>
+                                    </div>
+                                    <div class="weight-info">Gewichtung: 1.0</div>
+                                </div>
+                                <div class="criterion-input">
+                                    <input type="range" id="hazardClassification-range" min="0" max="100" value="0" data-field="hazardClassification">
+                                    <input type="number" id="hazardClassification-number" min="0" max="100" value="0" data-field="hazardClassification">
+                                </div>
+                            </div>
+
+                            <div class="criterion-card">
+                                <div class="criterion-header">
+                                    <div class="criterion-label">
+                                        <label>
+                                            <span id="crit-producer-label">Herstellerverantwortung</span>
+                                            <span class="badge badge-optional" id="badge-optional-producer">Optional</span>
+                                        </label>
+                                        <span class="description" id="crit-producer-desc">Erlaubt = Reuse möglich; Verbot = Recycle</span>
+                                    </div>
+                                    <div class="weight-info">Gewichtung: 0.5</div>
+                                </div>
+
+                                <div class="criterion-input toggle-input">
+                                    <div class="toggle-container">
+                                        <span class="toggle-label-left">Nicht gegeben<br><small>(Recycle)</small></span>
+                                        <label class="toggle-switch">
+                                            <input type="checkbox" id="producerResponsibility-toggle">
+                                            <span class="toggle-slider"></span>
+                                        </label>
+                                        <span class="toggle-label-right">Gegeben<br><small>(Reuse)</small></span>
+                                    </div>
+
+                                    <!-- Unsichtbarer Nummernwert fürs Backend -->
+                                    <input type="hidden" id="producerResponsibility-number" value="0" data-field="producerResponsibility">
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Application Suitability Criteria -->
+                        <div class="category-section category-application">
+                            <h3 id="cat-application">Anwendungseignung</h3>
+
+                            <div class="criterion-card">
+                                <div class="criterion-header">
+                                    <div class="criterion-label">
+                                        <label>
+                                            <span id="crit-power-label">Leistungs-/Energieanforderungen</span>
+                                            <span class="badge badge-mandatory" id="badge-mandatory-power">Pflichtkriterium</span>
+                                        </label>
+                                        <span class="description" id="crit-power-desc">100 = ausreichende Leistung; 0 = muss recycelt werden</span>
+                                    </div>
+                                    <div class="weight-info">Gewichtung: 1.0</div>
+                                </div>
+                                <div class="criterion-input">
+                                    <input type="range" id="powerRequirements-range" min="0" max="100" value="0" data-field="powerRequirements">
+                                    <input type="number" id="powerRequirements-number" min="0" max="100" value="0" data-field="powerRequirements">
+                                </div>
+                            </div>
+
+                            <div class="criterion-card">
+                                <div class="criterion-header">
+                                    <div class="criterion-label">
+                                        <label>
+                                            <span id="crit-age-label">Alter und Chemie</span>
+                                            <span class="badge badge-optional" id="badge-optional-age">Optional</span>
+                                        </label>
+                                        <span class="description" id="crit-age-desc">0 = geeignet; 10 = nicht geeignet</span>
+                                    </div>
+                                    <div class="weight-info">Gewichtung: 0.7</div>
+                                </div>
+                                <div class="criterion-input">
+                                    <input type="range" id="ageChemistry-range" min="0" max="10" value="10" data-field="ageChemistry">
+                                    <input type="number" id="ageChemistry-number" min="0" max="10" value="10" data-field="ageChemistry">
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Buttons -->
+                        <div class="button-group">
+                            <button class="btn-calculate" id="btn-calculate">
+                                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <rect x="4" y="2" width="16" height="20" rx="2" ry="2"></rect>
+                                <line x1="8" y1="6" x2="16" y2="6"></line>
+                                <line x1="8" y1="10" x2="16" y2="10"></line>
+                                <line x1="8" y1="14" x2="16" y2="14"></line>
+                                <line x1="8" y1="18" x2="16" y2="18"></line>
+                                </svg>
+                                <span id="btn-calculate-text">Entscheidung berechnen</span>
+                            </button>
+                            <button type="button" id="btn-save-decision" class="btn btn-success">
+                                Daten speichern
+                            </button>
+                            <button class="btn-reset" id="btn-reset">
+                                <span id="btn-reset-text">Zurücksetzen</span>
+                            </button>
+                        </div>
+
+                        <!-- Result Container -->
+                        <div class="result-container" id="result-container">
+                            <div class="result-header">
+                                <h2 id="result-header-title">Empfehlung</h2>
+                            </div>
+
+                            <div class="result-main" id="result-main">
+                                <div class="result-icon" id="result-icon"></div>
+                                <div class="result-text">
+                                    <h3 id="result-recommendation"></h3>
+                                    <p id="result-score"></p>
+                                </div>
+                            </div>
+
+                            <div class="result-details">
+                                <h3 id="result-details-title">Detaillierte Bewertung</h3>
+                                <div id="result-categories"></div>
+                            </div>
+
+                            <div class="info-box">
+                                <strong id="info-box-title">Entscheidungskriterien:</strong>
+                                <ul id="info-box-list">
+                                    <li id="info-rule-1">Alle Pflichtkriterien müssen erfüllt sein</li>
+                                    <li id="info-rule-2">Maximal 50% der optionalen Kriterien dürfen die Anforderungen nicht erfüllen</li>
+                                    <li id="info-rule-3">Gesamtgewichtete Punktzahl sollte ≥ 60 sein</li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <!-- JavaScript Module -->
+            <script src="js/language/translations.js"></script>
+            <script src="js/language/toggle_language.js"></script>
+
+            <script src="js/api/api.js"></script>
+
+            <script src="js/nav/navigation.js"></script>
+            <script src="js/util/utility.js"></script>
+            <script src="js/decision-support/save_battery.js"></script>
+            <script src="js/decision-support/decision.js"></script>
+
+            <script src="js/init/initilize.js"></script>
+            <script src="js/main/app.js"></script>
+    </body>
+</html>

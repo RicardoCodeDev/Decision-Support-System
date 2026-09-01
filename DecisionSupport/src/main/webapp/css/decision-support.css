@@ -1,0 +1,536 @@
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    background: #e0f7fa;
+    min-height: 100vh;
+    padding: 20px;
+}
+
+.dss-container {
+    max-width: 1200px;
+    margin: 0 auto;
+    background: white;
+    border-radius: 15px;
+    box-shadow: 0 10px 40px rgba(0,0,0,0.1);
+    padding: 20px;
+}
+
+.page.active {
+    padding: 20px;
+}
+
+/* Header */
+.dss-header {
+    background: #4caf50;
+    color: white;
+    border-radius: 12px;
+    padding: 30px;
+    margin-bottom: 30px;
+    text-align: center;
+}
+
+.dss-header h2 {
+    font-size: 2em;
+    margin-bottom: 5px;
+}
+
+.dss-header p {
+    font-size: 1em;
+    opacity: 0.85;
+}
+
+.category-section h3 {
+    margin: 0 0 20px 0;
+    font-size: 1.4em;
+    color: #1e293b;
+    font-weight: 700;
+    padding-bottom: 10px;
+    border-bottom: 3px solid #e2e8f0;
+}
+
+.criterion-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    margin-bottom: 10px;
+    flex-wrap: wrap;
+}
+
+.criterion-label label {
+    font-weight: 600;
+    color: #1a202c;
+    margin-bottom: 5px;
+}
+
+.criterion-label .description {
+    font-size: 0.85em;
+    color: #6b7280;
+}
+
+.badge {
+    display: inline-block;
+    padding: 4px 12px;
+    border-radius: 15px;
+    font-size: 0.75em;
+    font-weight: 600;
+    margin-left: 10px;
+}
+
+.badge-mandatory {
+    background: #fee2e2;
+    color: #991b1b;
+}
+.badge-optional {
+    background: #e5e7eb;
+    color: #4b5563;
+}
+
+.weight-info {
+    font-size: 0.85em;
+    color: #6b7280;
+}
+
+/* Inputs */
+.criterion-input {
+    display: flex;
+    align-items: center; /* vertikal zentrieren */
+    gap: 15px;           /* Abstand zwischen Slider und Zahl */
+}
+
+.criterion-input input[type="range"] {
+    flex: 1;             /* Slider nimmt den verfügbaren Platz ein */
+    border-radius: 20px;
+}
+
+.criterion-input input[type="range"]:hover {
+    background: linear-gradient(to right, #cbd5e1 0%, #94a3b8 100%);
+}
+
+.criterion-input input[type="range"]::-webkit-slider-thumb {
+    -webkit-appearance: none;
+    width: 24px;
+    height: 24px;
+    border-radius: 50%;
+    background: linear-gradient(145deg, #2196f3, #1976d2);
+    cursor: pointer;
+    box-shadow: 0 3px 8px rgba(33, 150, 243, 0.4);
+    transition: all 0.3s;
+}
+
+.criterion-input input[type="range"]::-webkit-slider-thumb:hover {
+    transform: scale(1.15);
+    box-shadow: 0 5px 12px rgba(33, 150, 243, 0.6);
+}
+
+.criterion-input input[type="range"]::-moz-range-thumb {
+    width: 24px;
+    height: 24px;
+    border-radius: 50%;
+    background: linear-gradient(145deg, #2196f3, #1976d2);
+    cursor: pointer;
+    border: none;
+    box-shadow: 0 3px 8px rgba(33, 150, 243, 0.4);
+    transition: all 0.3s;
+}
+
+.criterion-input input[type="range"]::-moz-range-thumb:hover {
+    transform: scale(1.15);
+    box-shadow: 0 5px 12px rgba(33, 150, 243, 0.6);
+}
+
+.criterion-input input[type="number"] {
+    width: 60px;
+    padding: 8px 12px;
+    text-align: center;
+    font-weight: 600;
+    font-size: 1em;
+    pointer-events: none;
+    user-select: none;
+    background: #f9fafb;
+    border: 2px solid #e5e7eb;
+    border-radius: 10px;
+
+}
+
+.criterion-input input[type="number"]:focus {
+    outline: none;
+    border-color: #e5e7eb;
+    box-shadow: none;
+}
+
+/* Webkit (Chrome, Edge, Safari) Pfeile entfernen */
+.criterion-input input[type="number"]::-webkit-outer-spin-button,
+.criterion-input input[type="number"]::-webkit-inner-spin-button {
+    -webkit-appearance: none;
+    margin: 0;
+}
+
+/* Buttons */
+.button-group {
+    margin-top: 25px;
+}
+
+.btn-calculate {
+    background: #2196f3;
+    color: white;
+    padding: 15px;
+    border-radius: 10px;
+    font-size: 1.1em;
+    cursor: pointer;
+    transition: all 0.3s;
+}
+
+.btn-calculate:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 10px 20px rgba(102,126,234,0.3);
+}
+
+.btn-reset {
+    padding: 15px 30px;
+    background: #e5e7eb;
+    border-radius: 10px;
+    font-size: 1.1em;
+    cursor: pointer;
+    transition: all 0.3s;
+}
+
+/* Results */
+.result-container {
+    background: white;
+    border-radius: 12px;
+    padding: 30px;
+    margin-top: 30px;
+    box-shadow: 0 5px 20px rgba(0,0,0,0.05);
+    display: none;
+}
+
+.result-container.show {
+    display: block;
+}
+
+.result-main {
+    padding: 25px;
+    border-radius: 12px;
+    display: flex;
+    gap: 20px;
+    align-items: center;
+    justify-content: center;
+}
+
+.result-main.reuse {
+    background: #f0fdf4;
+    border: 3px solid #22c55e;
+}
+.result-main.recycle {
+    background: #fef2f2;
+    border: 3px solid #ef4444;
+}
+
+.result-text h3 {
+    font-size: 1.8em;
+    color: #1a202c;
+}
+
+.result-text p {
+    font-size: 1.2em;
+    color: #4b5563;
+}
+
+/* Info Box */
+.info-box {
+    margin-top: 25px;
+    padding: 20px;
+    background: #eff6ff;
+    border: 1px solid #bfdbfe;
+    border-radius: 12px;
+}
+
+/* Loading Spinner */
+.dss-loading-spinner {
+    border: 4px solid #f3f4f6;
+    border-top: 4px solid #2196f3;
+    border-radius: 50%;
+    width: 40px;
+    height: 40px;
+    animation: spin 1s linear infinite;
+    margin: 0 auto 15px;
+}
+
+.disabled-range {
+    opacity: 0.4;
+    pointer-events: none;
+}
+
+.disabled-range::-webkit-slider-thumb {
+    background: #ccc !important;
+}
+
+input.disabled-range {
+    background: #f0f0f0;
+    color: #999;
+}
+
+.disabled-field {
+    opacity: 0.5;
+    pointer-events: none;
+}
+
+toggle-input {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    width: 100%;
+    padding: 15px 0;
+}
+
+.toggle-container {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    width: 100%;
+    gap: 20px;
+}
+
+.toggle-label-left,
+.toggle-label-right {
+    font-size: 0.95em;
+    color: #555;
+    text-align: center;
+    flex: 1;
+    transition: all 0.3s;
+}
+
+.toggle-label-left small,
+.toggle-label-right small {
+    display: block;
+    font-size: 0.8em;
+    color: #888;
+    margin-top: 3px;
+}
+
+.toggle-switch {
+    position: relative;
+    display: inline-block;
+    width: 70px;
+    height: 34px;
+    cursor: pointer;
+    flex-shrink: 0;
+}
+
+.toggle-switch input {
+    opacity: 0;
+    width: 0;
+    height: 0;
+}
+
+.toggle-slider {
+    position: absolute;
+    cursor: pointer;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: #ef4444;
+    transition: 0.4s;
+    border-radius: 34px;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.15);
+}
+
+.toggle-slider:before {
+    position: absolute;
+    content: "";
+    height: 26px;
+    width: 26px;
+    left: 4px;
+    bottom: 4px;
+    background-color: white;
+    transition: 0.4s;
+    border-radius: 50%;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+}
+
+.toggle-switch input:checked + .toggle-slider {
+    background-color: #22c55e;
+}
+
+.toggle-switch input:checked + .toggle-slider:before {
+    transform: translateX(36px);
+}
+
+.toggle-slider-label-left,
+.toggle-slider-label-right {
+    font-size: 0.95em;
+    flex: 1;
+    text-align: center;
+    transition: all 0.3s;
+}
+
+.toggle-container input:not(:checked) ~ .toggle-slider-label-left {
+    font-weight: 600;
+    color: #ef4444;
+}
+
+.toggle-container input:checked ~ .toggle-slider-label-right {
+    font-weight: 600;
+    color: #22c55e;
+}
+
+.slider-labels {
+    display: flex;
+    justify-content: space-between;
+    margin-top: 8px;
+    font-size: 0.85em;
+    pointer-events: none;
+    padding: 0 2px;
+}
+
+.slider-labels span {
+    flex: 1;
+    text-align: center;
+    font-weight: 500;
+    transition: all 0.3s;
+}
+
+.slider-labels span:first-child {
+    color: #ef4444;
+    font-weight: 600;
+}
+.slider-labels span:nth-child(2) {
+    color: #f59e0b;
+}
+.slider-labels span:nth-child(3) {
+    color: #22c55e;
+}
+.slider-labels span:last-child {
+    color: #16a34a;
+    font-weight: 600;
+}
+
+/* Market Demand spezifisch - ohne Input-Feld, nur Zahl */
+.market-demand-input {
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+    position: relative;
+}
+
+.market-demand-value {
+    position: absolute;
+    right: -50px;
+    top: 0;
+    font-size: 1.1em;
+    font-weight: 700;
+    color: #2196f3;
+    min-width: 40px;
+    text-align: center;
+    pointer-events: none;
+    user-select: none;
+}
+
+/* Entfernt die Pfeile bei number Inputs */
+input[type="number"]::-webkit-outer-spin-button,
+input[type="number"]::-webkit-inner-spin-button {
+    -webkit-appearance: none;
+    margin: 0;
+}
+
+.battery-selection-section {
+    background: #f8f9fa;
+    padding: 20px;
+    border-radius: 8px;
+    margin-bottom: 30px;
+}
+
+.battery-selection-section h3 {
+    margin-top: 0;
+    color: #333;
+    font-size: 1.2rem;
+}
+
+.section-divider {
+    margin: 30px 0;
+    border: 0;
+    border-top: 2px solid #e0e0e0;
+}
+
+.button-group {
+    display: flex;
+    gap: 10px;
+    margin-top: 20px;
+    flex-wrap: wrap;
+}
+
+.btn {
+    padding: 10px 20px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 1rem;
+    transition: all 0.3s ease;
+}
+
+.btn-primary {
+    background: #667eea;
+    color: white;
+}
+
+.btn-primary:hover {
+    background: #5568d3;
+}
+
+.btn-success {
+    background: #48bb78;
+    color: white;
+    padding: 15px;
+    border-radius: 10px;
+    font-size: 1.1em;
+    cursor: pointer;
+    transition: all 0.3s;
+}
+
+.btn-success:hover {
+    background: #38a169;
+}
+
+.btn-secondary {
+    background: #718096;
+    color: white;
+}
+
+.btn-secondary:hover {
+    background: #4a5568;
+}
+
+.form-control {
+    width: 100%;
+    padding: 10px;
+    border: 1px solid #cbd5e0;
+    border-radius: 5px;
+    font-size: 1rem;
+}
+
+.form-control:focus {
+    outline: none;
+    border-color: #667eea;
+    box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+}
+
+.form-text {
+    display: block;
+    margin-top: 5px;
+    font-size: 0.875rem;
+}
+
+.text-muted {
+    color: #718096;
+}
+
+input[type="number"] {
+    -moz-appearance: textfield; 
+}
