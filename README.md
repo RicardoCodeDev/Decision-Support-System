@@ -96,7 +96,7 @@ Die genaue Konfiguration kann je nach lokaler Umgebung abweichen.
 
 ## Mein Beitrag
 
-Im Rahmen des Projekts habe ich unter anderem an der Entwicklung des Frontends, der REST API, der Datenbankanbindung und der Entscheidungslogik gearbeitet.
+Im Rahmen meines Abschlussprojekts habe ich die Anwendung entwickelt und dabei unter anderem das Frontend, die REST API, die Datenbankanbindung und die Entscheidungslogik umgesetzt.
 
 Ein besonderer Schwerpunkt lag auf der Umsetzung des Decision-Support-Systems. Hierfür wurden verschiedene Bewertungskriterien definiert, gewichtet und zu einer automatisierten Empfehlung zusammengeführt.
 
