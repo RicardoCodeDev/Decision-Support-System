@@ -106,6 +106,4 @@ Das Projekt entstand im Zusammenhang mit dem **RENOVATE EU-Projekt** und beschä
 
 ## Hinweis
 
-Dieses Repository dient der Darstellung meines Abschlussprojekts und meiner technischen Arbeit im Rahmen meiner Ausbildung.
-
 Projektbezogene Daten, Konfigurationen oder Komponenten können aus Datenschutz-, Sicherheits- oder Lizenzgründen verändert oder nicht vollständig enthalten sein.
